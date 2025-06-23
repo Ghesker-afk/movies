@@ -1,3 +1,11 @@
+use std::io;
+
+fn read_line_trimmed() -> String {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Falha ao ler input");
+    input.trim().to_string()
+}
+
 #[derive(Debug, Clone)]
 pub enum Genre {
     Action,
