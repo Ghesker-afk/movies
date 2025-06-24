@@ -23,7 +23,41 @@ fn read_genres_from_input() -> Vec<Genre> {
     genres
 }
 
-#[derive(Debug, Clone)]
+fn read_movie_from_input() -> Option<Movie> {
+    println!("\nDigite o título do filme (ou 'fim' para parar):");
+    let title = read_line_trimmed();
+    if title == "fim" {
+        return None;
+    }
+
+    println!("Digite o gênero do filme (action, comedy, drama, scifi, horror, fantasy, documentary):");
+    let genre_input = read_line_trimmed();
+    let maybe_genre = Genre::from_str(&genre_input);
+
+    if maybe_genre.is_none() {
+        println!("Gênero inválido. Filme ignorado.");
+        return None;
+    }
+
+    let genre = maybe_genre.unwrap();
+
+    println!("Digite a nota do filme (de 0.0 a 10.0):");
+    let rating_input = read_line_trimmed();
+    let rating: f32 = rating_input.parse().unwrap_or(-1.0);
+    
+    if rating < 0.0 || rating > 10.0 {
+        println!("Nota inválida. Filme ignorado.");
+        return None;
+    }
+
+    Some(Movie {
+        title,
+        genre,
+        rating,
+    })
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Genre {
     Action,
     Comedy,
@@ -33,6 +67,9 @@ pub enum Genre {
     Fantasy,
     Documentary,
 }
+
+
+// Traduzir a entrada textual para uma variante real do enum Genre.
 
 impl Genre {
     fn from_str(input: &str) -> Option<Genre> {
@@ -125,19 +162,19 @@ impl UserPreference for MultiCriteriaUser {
             }
         }
 
-        let rating_ok = movie.rating >= self.mininum_rating;
+        let rating_ok = movie.rating >= self.minimum_rating;
 
         genre_ok && rating_ok
     }
 }
 
 fn main() {
-    let catalog = vec![
+    let _catalog = vec![
         Movie { title: "Explosão Final".to_string(), genre: Genre::Action, rating: 7.5 },
         Movie { title: "Risada Garantida".to_string(), genre: Genre::Comedy, rating: 6.2 },
         Movie { title: "Drama Profundo".to_string(), genre: Genre::Drama, rating: 8.9 },
         Movie { title: "Ficção Brilhante".to_string(), genre: Genre::SciFi, rating: 9.0 },
     ];
 
-    let preferred_genres = read_genres_from_input();
+    let _preferred_genres = read_genres_from_input();
 }
